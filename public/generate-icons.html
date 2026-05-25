@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head><title>Generate Icons</title></head>
+<body>
+<p>Deschide această pagină în browser, apasă butonul și salvează iconițele generate.</p>
+<canvas id="c192" width="192" height="192" style="border:1px solid #ccc;margin:10px"></canvas>
+<canvas id="c512" width="512" height="512" style="border:1px solid #ccc;margin:10px"></canvas>
+<br>
+<button onclick="generate()">Generează și Descarcă Iconițe</button>
+<script>
+function drawIcon(canvas) {
+  const ctx = canvas.getContext('2d');
+  const s = canvas.width;
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, s, s);
+  grad.addColorStop(0, '#080d18');
+  grad.addColorStop(1, '#0d2040');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.roundRect(0, 0, s, s, s * 0.2);
+  ctx.fill();
+  // Accent circle
+  const glow = ctx.createRadialGradient(s/2, s/2, 0, s/2, s/2, s/2);
+  glow.addColorStop(0, '#00d4ff22');
+  glow.addColorStop(1, 'transparent');
+  ctx.fillStyle = glow;
+  ctx.fillRect(0, 0, s, s);
+  // Football emoji
+  ctx.font = `${s * 0.55}px serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('⚽', s/2, s/2 - s*0.03);
+  // Text "FR"
+  ctx.font = `bold ${s * 0.14}px 'Arial', sans-serif`;
+  ctx.fillStyle = '#00d4ff';
+  ctx.fillText('FriendlyRival', s/2, s * 0.82);
+}
+
+function generate() {
+  ['c192', 'c512'].forEach((id, i) => {
+    const canvas = document.getElementById(id);
+    drawIcon(canvas);
+    const link = document.createElement('a');
+    link.download = id === 'c192' ? 'icon-192.png' : 'icon-512.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  });
+}
+</script>
+</body>
+</html>
