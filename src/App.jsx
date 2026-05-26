@@ -173,11 +173,11 @@ export default function App() {
     }
   };
 
-  const loadAllPredictions = async () => {
-    // Supabase RLS returnează automat doar pariurile blocate pentru alți useri
-    const { data } = await supabase
+ const loadAllPredictions = async () => {
+    const { data, error } = await supabase
       .from('predictions')
-      .select('*, profiles(display_name, username)');
+      .select('*');
+    console.log('allPredictions:', data, 'error:', error);
     if (data) setAllPredictions(data);
   };
 
