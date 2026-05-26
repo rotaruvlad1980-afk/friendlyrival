@@ -1055,13 +1055,40 @@ function AdminResults({ matches, results, setResult, actualFinals, setActualFina
 
 function AdminUsers({ profiles, allPredictions, unlockPrediction }) {
   const players = profiles.filter(p => !p.is_admin);
+  const [showAdd, setShowAdd] = useState(false);
+  const [newUser, setNewUser] = useState({ username: '', name: '', password: '', isAdmin: false });
+  const [msg, setMsg] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleCreate = async () => {
+    if (!newUser.username || !newUser.name || !newUser.password)
+      return setMsg({ type: 'err', text: 'Completează toate câmpurile.' });
+    if (newUser.password.length < 6)
+      return setMsg({ type: 'err', text: 'Parola trebuie să aibă minim 6 caractere.' });
+    setLoading(true);
+    const { createUser } = await import('./adminApi.js');
+    const result = await createUser(newUser.username, newUser.name, newUser.password, newUser.isAdmin);
+    if (result.error) setMsg({ type: 'err', text: result.error });
+    else {
+      setMsg({ type: 'ok', text: `Utilizatorul "${newUser.name}" a fost creat!` });
+      setNewUser({ username: '', name: '', password: '', isAdmin: false });
+      setShowAdd(false);
+      window.location.reload();
+    }
+    setLoading(false);
+  };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <div style={s.alertBox}>
-        💡 Pentru a adăuga sau șterge utilizatori mergi în <strong>Supabase → Authentication → Users</strong>.
-        Modificările de nume și parolă se fac din tab-ul <strong>Profil</strong> de către fiecare jucător.
-      </div>
+      {msg && (
+        <div style={{ ...s.alertBox,
+          background: msg.type === 'ok' ? C.accent2 + '22' : C.danger + '22',
+          borderColor: msg.type === 'ok' ? C.accent2 + '66' : C.danger + '66',
+          color: msg.type === 'ok' ? C.accent2 : C.danger }}>
+          {msg.text}
+        </div>
+      )}
+
       {players.map(u => {
         const lockedPreds = allPredictions.filter(p => p.user_id === u.id && p.locked);
         return (
@@ -1074,7 +1101,7 @@ function AdminUsers({ profiles, allPredictions, unlockPrediction }) {
             </div>
             {lockedPreds.length > 0 && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <p style={{ color: C.muted, fontSize: 12, margin: 0 }}>Pariuri blocate — poți debloca la cerere:</p>
+                <p style={{ color: C.muted, fontSize: 12, margin: 0 }}>Pariuri blocate:</p>
                 {lockedPreds.slice(0, 5).map(p => (
                   <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 8,
                     padding: '5px 10px', background: C.surface, borderRadius: 8, fontSize: 13 }}>
@@ -1093,6 +1120,49 @@ function AdminUsers({ profiles, allPredictions, unlockPrediction }) {
           </div>
         );
       })}
+
+      {showAdd ? (
+        <div style={s.card}>
+          <h3 style={{ color: C.text, fontSize: 15, fontWeight: 700, margin: 0 }}>➕ Jucător nou</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div>
+              <label style={s.label}>Username (doar litere mici, fără spații)</label>
+              <input style={s.input} placeholder="ex: radu" value={newUser.username}
+                onChange={e => setNewUser(n => ({ ...n, username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') }))} />
+            </div>
+            <div>
+              <label style={s.label}>Nume afișat</label>
+              <input style={s.input} placeholder="ex: Radu" value={newUser.name}
+                onChange={e => setNewUser(n => ({ ...n, name: e.target.value }))} />
+            </div>
+            <div>
+              <label style={s.label}>Parolă (minim 6 caractere)</label>
+              <input style={s.input} type="text" placeholder="ex: Radu2026!" value={newUser.password}
+                onChange={e => setNewUser(n => ({ ...n, password: e.target.value }))} />
+            </div>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, color: C.muted, fontSize: 13, cursor: 'pointer' }}>
+              <input type="checkbox" checked={newUser.isAdmin}
+                onChange={e => setNewUser(n => ({ ...n, isAdmin: e.target.checked }))} />
+              Este admin
+            </label>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button style={{ ...s.btnPrimary, opacity: loading ? 0.7 : 1 }}
+                onClick={handleCreate} disabled={loading}>
+                {loading ? 'Se creează...' : '✅ Creează'}
+              </button>
+              <button style={{ ...s.btnSm, background: C.surface }}
+                onClick={() => { setShowAdd(false); setMsg(null); }}>
+                Anulează
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <button style={{ ...s.btnSm, alignSelf: 'flex-start', padding: '10px 20px', fontSize: 14 }}
+          onClick={() => setShowAdd(true)}>
+          ➕ Adaugă jucător nou
+        </button>
+      )}
     </div>
   );
 }
