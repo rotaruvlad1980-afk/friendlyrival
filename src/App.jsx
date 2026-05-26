@@ -126,7 +126,7 @@ export default function App() {
 
   // ─── Load data ─────────────────────────────────────────────────────────────
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser || !profile) return;
     loadMatches();
     loadMyPredictions();
     loadAllPredictions();
@@ -134,7 +134,7 @@ export default function App() {
     loadAllFinalists();
     loadActualFinals();
     loadProfiles();
-  }, [currentUser]);
+  }, [currentUser, profile]);
 
   const loadMatches = async () => {
     const { data } = await supabase
