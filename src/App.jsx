@@ -247,10 +247,9 @@ export default function App() {
     setSyncing(false);
   }, []);
 
-  // Auto-sync dezactivat temporar pentru test
-  // useEffect(() => {
-  //   if (currentUser) sync();
-  // }, [currentUser]);
+  useEffect(() => {
+    if (currentUser) sync();
+  }, [currentUser]);
 
   // ─── Predictions ───────────────────────────────────────────────────────────
   const setPred = async (matchId, side, val) => {
