@@ -17,8 +17,13 @@ function timeLeft(matchDate) {
 }
 function fmtDate(ds) {
   const d = new Date(ds);
-  return d.toLocaleDateString('ro-RO', { day: '2-digit', month: 'short', weekday: 'short' })
-    + ' ' + d.toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleDateString('ro-RO', { 
+    day: '2-digit', month: 'short', weekday: 'short',
+    timeZone: 'Europe/Bucharest'
+  }) + ' ' + d.toLocaleTimeString('ro-RO', { 
+    hour: '2-digit', minute: '2-digit',
+    timeZone: 'Europe/Bucharest'
+  });
 }
 
 // ─── Colors ───────────────────────────────────────────────────────────────────
