@@ -252,9 +252,9 @@ export default function App() {
     setSyncing(false);
   }, []);
 
-  useEffect(() => {
-    if (currentUser) sync();
-  }, [currentUser]);
+//useEffect(() => {
+//    if (currentUser) sync();
+//  }, [currentUser]);
 
   // ─── Predictions ───────────────────────────────────────────────────────────
   const setPred = async (matchId, side, val) => {
