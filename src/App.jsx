@@ -655,7 +655,7 @@ function MatchCard({ match, pred, allPreds, profiles, result, setPred, isAdmin, 
     <div style={{ ...s.matchCard, ...(status ? { borderColor: SC[status] + '66' } : {}) }}>
       <div style={s.matchMeta}>
         <span style={s.roundBadge}>{match.round}</span>
-        <span style={{ color: C.muted, fontSize: 12 }}>{fmtDate(match.date)}</span>
+        <span style={{ color: C.muted, fontSize: 12 }}>{console.log('match.date:', match.date) || fmtDate(match.date)}</span>
         {open && tl && <span style={{ color: C.warn, fontSize: 11, fontWeight: 700 }}>⏱ {tl}</span>}
         {!open && !played && <span style={{ color: C.muted, fontSize: 11 }}>🔒 Blocat</span>}
         {played && <span style={{ color: '#888', fontSize: 11 }}>✅ Jucat</span>}
