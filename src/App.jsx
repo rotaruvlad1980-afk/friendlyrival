@@ -24,7 +24,7 @@ function fmtDate(ds) {
     hour: '2-digit', minute: '2-digit',
     timeZone: 'Europe/Bucharest'
   });
-}
+} 
 
 // ─── Colors ───────────────────────────────────────────────────────────────────
 const C = {
