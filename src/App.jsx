@@ -238,7 +238,7 @@ export default function App() {
 
       const { error } = await supabase.from('matches').upsert(rows, {
         onConflict: 'id',
-        ignoreDuplicates: false,
+        ignoreDuplicates: true,
       });
 
       if (error) throw new Error(error.message);
