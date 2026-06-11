@@ -17,18 +17,14 @@ function timeLeft(matchDate) {
 }
 function fmtDate(ds) {
   const d = new Date(ds);
-  // Conversie manuală la ora României (UTC+3 vara)
-  const roTime = new Date(d.getTime() + 3 * 60 * 60 * 1000);
-  const zile = ['Dum', 'Lun', 'Mar', 'Mie', 'Joi', 'Vin', 'Sâm'];
-  const luni = ['ian', 'feb', 'mar', 'apr', 'mai', 'iun', 'iul', 'aug', 'sep', 'oct', 'noi', 'dec'];
-  const zi = zile[roTime.getUTCDay()];
-  const ziNr = String(roTime.getUTCDate()).padStart(2, '0');
-  const luna = luni[roTime.getUTCMonth()];
-  const ora = String(roTime.getUTCHours()).padStart(2, '0');
-  const min = String(roTime.getUTCMinutes()).padStart(2, '0');
-  return `${zi}, ${ziNr} ${luna} ${ora}:${min}`;
+  return d.toLocaleDateString('ro-RO', {
+    day: '2-digit', month: 'short', weekday: 'short',
+    timeZone: 'Europe/Bucharest'
+  }) + ' ' + d.toLocaleTimeString('ro-RO', {
+    hour: '2-digit', minute: '2-digit',
+    timeZone: 'Europe/Bucharest'
+  });
 }
-
 // ─── Colors ───────────────────────────────────────────────────────────────────
 const C = {
   bg: '#080d18', surface: '#0f1923', card: '#162032', border: '#1c3354',
