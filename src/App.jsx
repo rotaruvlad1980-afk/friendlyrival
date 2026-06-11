@@ -217,40 +217,8 @@ export default function App() {
 
   // ─── Sync openfootball ─────────────────────────────────────────────────────
   const sync = useCallback(async () => {
-    setSyncing(true); setSyncMsg('');
-    try {
-      const fetched = await fetchMatches();
-      if (!fetched.length) throw new Error('Nicio dată primită');
-
-      // Upsert meciuri în Supabase
-      const rows = fetched.map(m => ({
-        id: m.id,
-        home: m.home,
-        away: m.away,
-        match_date: m.date,
-        match_group: m.group || null,
-        round: m.round,
-        score_home: m.score ? parseInt(m.score.home) : null,
-        score_away: m.score ? parseInt(m.score.away) : null,
-        is_manual: false,
-      }));
-
-      const { error } = await supabase.from('matches').upsert(rows, {
-        onConflict: 'id',
-        ignoreDuplicates: true,
-      });
-
-      if (error) throw new Error(error.message);
-
-      await loadMatches();
-      setLastSync(Date.now());
-      setSyncMsg(`✅ ${fetched.length} meciuri actualizate`);
-    } catch (e) {
-      setSyncMsg(`⚠️ Eroare: ${e.message}`);
-    }
-    setSyncing(false);
+    setSyncMsg('⚠️ Sincronizarea este dezactivată. Scorurile se introduc manual din Admin.');
   }, []);
-
 //useEffect(() => {
 //    if (currentUser) sync();
 //  }, [currentUser]);
