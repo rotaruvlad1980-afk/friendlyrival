@@ -345,6 +345,7 @@ export default function App() {
     const userFinalists = allFinalists.find(f => f.user_id === p.id);
     const fin = userFinalists ? [userFinalists.team1, userFinalists.team2] : [];
 
+    console.log('actualFinals pentru', p.display_name, ':', actualFinals, 'fin:', fin);
     const { pts, exact, penalties } = calcPoints(
       userPreds, results, fin, actualFinals.filter(Boolean), matches
     );
